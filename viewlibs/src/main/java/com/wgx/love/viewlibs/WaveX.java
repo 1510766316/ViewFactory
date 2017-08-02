@@ -31,6 +31,8 @@ public class WaveX extends View{
     private Paint mPaint;
 
     private ValueAnimator mValueAnimation;
+
+    private int status = 1; // 0:低  1:正常  2:高
     public WaveX(Context context) {
         this(context,null);
     }
@@ -46,20 +48,23 @@ public class WaveX extends View{
 
     private void init(){
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mPaint.setStrokeWidth(8);
-        mPaint.setColor(Color.LTGRAY);
-        mWaveLength = 800;
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(2);
+        mPaint.setColor(Color.YELLOW);
+        mWaveLength = 400;
         if (null == mValueAnimation){
-            mValueAnimation = ValueAnimator.ofInt(0, mWaveLength);
+            mValueAnimation = ValueAnimator.ofInt(0, 1);
         }
-        mValueAnimation.setDuration(1400);
+        mValueAnimation.setDuration(1200);
         mValueAnimation.setInterpolator(new LinearInterpolator());
         mValueAnimation.setRepeatCount(ValueAnimator.INFINITE);
         mValueAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                offset = (int) animation.getAnimatedValue();
+                    offset += 5;
+                    if (offset > mWaveLength ){
+                        offset = offset - mWaveLength;
+                    }
                 invalidate();
             }
         });
@@ -82,8 +87,8 @@ public class WaveX extends View{
         mPath.reset();
         mPath.moveTo(-mWaveLength,mCenterY);
         for (int i = 0; i < mWaveCount; i++) {
-            mPath.quadTo(-mWaveLength * 3 / 4 + i * mWaveLength + offset,mCenterY + 60,-mWaveLength / 2 + i * mWaveLength + offset,mCenterY);
-            mPath.quadTo(-mWaveLength / 4 + i * mWaveLength + offset,mCenterY - 60,i * mWaveLength + offset,mCenterY);
+            mPath.quadTo(-mWaveLength * 3 / 4 + i * mWaveLength + offset,mCenterY + 80,-mWaveLength / 2 + i * mWaveLength + offset,mCenterY);
+            mPath.quadTo(-mWaveLength / 4 + i * mWaveLength + offset,mCenterY - 80,i * mWaveLength + offset,mCenterY);
         }
         mPath.lineTo(mScreenWidth,mScreenHeight);
         mPath.lineTo(0,mScreenHeight);
