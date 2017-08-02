@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IndicateX">
+        <attr name="DefaultColor" format="color"></attr>
+        <attr name="FocusColor" format="color"></attr>
+        <attr name="Offset" format="integer"></attr>
+        <attr name="Distance" format="integer"></attr>
+        <attr name="TextSize" format="dimension"></attr>
+        <attr name="LineSize" format="dimension"></attr>
+        <attr name="FocusTextSize" format="dimension"></attr>
+        <attr name="FocusLineSize" format="dimension"></attr>
+        <attr name="ShowLine" format="boolean"></attr>
+    </declare-styleable>
+</resources>
