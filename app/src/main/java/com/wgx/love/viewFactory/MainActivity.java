@@ -6,12 +6,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.wgx.love.viewFactory.fragments.ClockXFragment;
 import com.wgx.love.viewFactory.fragments.IndicateXFragment;
+import com.wgx.love.viewFactory.fragments.MusicDancerFragment;
+import com.wgx.love.viewFactory.fragments.ProgressBarFragment;
 import com.wgx.love.viewFactory.fragments.WaveXFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
 
     private IndicateXFragment mIndicateXFragment;
     private WaveXFragment mWaveXFragment;
+    private ClockXFragment mClockXFragment;
+    private ProgressBarFragment mProgressBarFragment;
+    private MusicDancerFragment mMusicDancerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
     private void init() {
         mIndicateXFragment = IndicateXFragment.newInstance();
         mWaveXFragment = WaveXFragment.newInstance();
-        fragments = new Fragment[]{mIndicateXFragment, mWaveXFragment};
+        mClockXFragment = ClockXFragment.newInstance();
+        mProgressBarFragment = ProgressBarFragment.newInstance();
+        mMusicDancerFragment = MusicDancerFragment.newInstance();
+        fragments = new Fragment[]{mIndicateXFragment, mWaveXFragment, mClockXFragment, mProgressBarFragment, mMusicDancerFragment};
 
     }
 
@@ -51,11 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_settings:
 
@@ -67,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                if (which > fragments.length || which < 0) {
+                                    Log.e(TAG, "The selected index is out of fragments arrays!");
+                                    return true;
+                                }
                                 switch (which) {
                                     case 0:
                                         if (currentIndex == 0) {
@@ -79,6 +89,24 @@ public class MainActivity extends AppCompatActivity {
                                             return true;
                                         }
                                         index = 1;
+                                        break;
+                                    case 2:
+                                        if (currentIndex == 2) {
+                                            return true;
+                                        }
+                                        index = 2;
+                                        break;
+                                    case 3:
+                                        if (currentIndex == 3) {
+                                            return true;
+                                        }
+                                        index = 3;
+                                        break;
+                                    case 4:
+                                        if (currentIndex == 4) {
+                                            return true;
+                                        }
+                                        index = 4;
                                         break;
                                 }
                                 switcherFragment(index);
@@ -98,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     private void switcherFragment(int index) {
         if (currentIndex != index) {
             FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
-            if (currentIndex > -1){
+            if (currentIndex > -1) {
                 trx.hide(fragments[currentIndex]);
             }
             if (!fragments[index].isAdded()) {

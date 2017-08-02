@@ -96,7 +96,7 @@ public class IndicateX extends View {
         mOffset = ta.getInteger(R.styleable.IndicateX_Offset, 8);
         mDistance = ta.getInt(R.styleable.IndicateX_Distance, 10);
         mFocusTextSize = ta.getDimension(R.styleable.IndicateX_FocusTextSize, 34);
-        mTextSize = ta.getDimension(R.styleable.IndicateX_TextSize, 18);
+        mTextSize = ta.getDimension(R.styleable.IndicateX_TabTextSize, 18);
         mFocusLineSize = ta.getDimension(R.styleable.IndicateX_FocusLineSize, 8);
         mLineSize = ta.getDimension(R.styleable.IndicateX_LineSize, 4);
         showLine = ta.getBoolean(R.styleable.IndicateX_ShowLine, true);
@@ -128,9 +128,9 @@ public class IndicateX extends View {
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
         //设置一个默认值，就是这个View的默认宽度为450，这个看我们自定义View的要求
-        int result = 450;
+        int result = 550;
         if (specMode == MeasureSpec.AT_MOST) {//相当于我们设置为wrap_content
-            result = 450;
+            result = 550;
         } else if (specMode == MeasureSpec.EXACTLY) {//相当于我们设置为match_parent或者为一个具体的值
             result = specSize;
         }

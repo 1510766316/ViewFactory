@@ -3,5 +3,8 @@
     <array name="viewItems">
         <item >IndicateX</item>
         <item >WaveX</item>
+        <item >ClockX</item>
+        <item >CircularProgressBar</item>
+        <item >MusicDancer</item>
     </array>
 </resources>

@@ -5,10 +5,54 @@
         <attr name="FocusColor" format="color"></attr>
         <attr name="Offset" format="integer"></attr>
         <attr name="Distance" format="integer"></attr>
-        <attr name="TextSize" format="dimension"></attr>
+        <attr name="TabTextSize" format="dimension"></attr>
         <attr name="LineSize" format="dimension"></attr>
         <attr name="FocusTextSize" format="dimension"></attr>
         <attr name="FocusLineSize" format="dimension"></attr>
         <attr name="ShowLine" format="boolean"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="ClockX">
+        <attr name="offset" format="integer" />
+        <attr name="hWidth" format="integer" />
+        <attr name="mWidth" format="integer" />
+        <attr name="sWidth" format="integer" />
+        <attr name="circleWidth" format="integer" />
+        <attr name="numWidth" format="integer" />
+        <attr name="heartWidth" format="integer" />
+        <attr name="heartRadius" format="integer" />
+        <attr name="hColor" format="color" />
+        <attr name="mColor" format="color" />
+        <attr name="sColor" format="color" />
+        <attr name="circleColor" format="color" />
+        <attr name="heartColor" format="color" />
+        <attr name="numColor" format="color" />
+        <attr name="densityHour" format="float" />
+        <attr name="densityMinute" format="float" />
+        <attr name="densitySecond" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="CircularProgressBar">
+        <attr name="LineWidth" format="dimension"/>
+        <attr name="BgColor" format="color"/>
+        <attr name="Radius" format="dimension"/>
+        <attr name="FillFirstColor" format="color"/>
+        <attr name="FillSecondColor" format="color"/>
+        <attr name="TipsTextColor" format="color"/>
+        <attr name="TipsTextSize" format="dimension"/>
+        <attr name="ThumbSize" format="integer"/>
+        <attr name="ThumbColor" format="dimension"/>
+        <attr name="ThumbImg" format="integer"/>
+        <attr name="StartAngle" format="integer"/>
+        <attr name="ShowProgressText" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="MusicDancer">
+        <attr name="danceWidth" format="integer"/>
+        <attr name="danceOffset" format="integer"/>
+        <attr name="danceNum" format="integer"/>
+        <attr name="danceColor" format="color"/>
+        <attr name="danceRefreshTime" format="integer"/>
+        <attr name="danceAuto" format="boolean"/>
     </declare-styleable>
 </resources>
