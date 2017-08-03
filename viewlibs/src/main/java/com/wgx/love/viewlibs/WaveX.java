@@ -12,11 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
+import java.util.Random;
+
 /**
  * Created by wugx on 17-8-1.
  */
 
-public class WaveX extends View{
+public class WaveX extends View {
 
     private final static String TAG = "WaveX";
 
@@ -24,7 +26,7 @@ public class WaveX extends View{
     private int mScreenWidth;
     private int mScreenHeight;
     private int mCenterY;
-    private  int mWaveCount;
+    private int mWaveCount;
     private int offset;
 
     private Path mPath;
@@ -32,13 +34,15 @@ public class WaveX extends View{
 
     private ValueAnimator mValueAnimation;
 
-    private int status = 1; // 0:低  1:正常  2:高
+    private boolean status = true;
+    Random random = new Random();
+
     public WaveX(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public WaveX(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public WaveX(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -46,14 +50,14 @@ public class WaveX extends View{
         init();
     }
 
-    private void init(){
+    private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(2);
         mPaint.setColor(Color.YELLOW);
-        mWaveLength = 400;
-        if (null == mValueAnimation){
-            mValueAnimation = ValueAnimator.ofInt(0, 1);
+        mWaveLength = 300;
+        if (null == mValueAnimation) {
+            mValueAnimation = ValueAnimator.ofInt(0, 400);
         }
         mValueAnimation.setDuration(1200);
         mValueAnimation.setInterpolator(new LinearInterpolator());
@@ -61,10 +65,11 @@ public class WaveX extends View{
         mValueAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                    offset += 5;
-                    if (offset > mWaveLength ){
-                        offset = offset - mWaveLength;
-                    }
+                offset += 5;
+                if (offset > mWaveLength) {
+                    offset = offset - mWaveLength;
+                }
+
                 invalidate();
             }
         });
@@ -79,39 +84,41 @@ public class WaveX extends View{
         mScreenWidth = w;
         mCenterY = h / 2;
         mWaveCount = (int) Math.round(mScreenWidth / mWaveLength + 1.5); // 计算波形的个数
+
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         mPath.reset();
-        mPath.moveTo(-mWaveLength,mCenterY);
-        for (int i = 0; i < mWaveCount; i++) {
-            mPath.quadTo(-mWaveLength * 3 / 4 + i * mWaveLength + offset,mCenterY + 80,-mWaveLength / 2 + i * mWaveLength + offset,mCenterY);
-            mPath.quadTo(-mWaveLength / 4 + i * mWaveLength + offset,mCenterY - 80,i * mWaveLength + offset,mCenterY);
+        mPath.moveTo(-mWaveLength, mCenterY);
+        for (int j = 0; j < mWaveCount; j++) {
+            mPath.quadTo(-mWaveLength * 3 / 4 + j * mWaveLength + offset , mCenterY , -mWaveLength / 2 + j * mWaveLength + offset, mCenterY);
+            mPath.quadTo(-mWaveLength / 4 + j * mWaveLength + offset, mCenterY, j * mWaveLength + offset, mCenterY);
         }
-        mPath.lineTo(mScreenWidth,mScreenHeight);
-        mPath.lineTo(0,mScreenHeight);
+
+        mPath.lineTo(mScreenWidth, mScreenHeight);
+        mPath.lineTo(0, mScreenHeight);
         mPath.close();
-        canvas.drawPath(mPath,mPaint);
+        canvas.drawPath(mPath, mPaint);
     }
 
-    public void startAnimation(){
-        if (null != mValueAnimation && mValueAnimation.isStarted()){
+    public void startAnimation() {
+        if (null != mValueAnimation && mValueAnimation.isStarted()) {
             mValueAnimation.end();
-        }else if(null != mValueAnimation && !mValueAnimation.isStarted()){
+        } else if (null != mValueAnimation && !mValueAnimation.isStarted()) {
             mValueAnimation.start();
         }
     }
 
-    public boolean isPlaying(){
+    public boolean isPlaying() {
         if (null == mValueAnimation)
             return false;
         return mValueAnimation.isStarted();
     }
 
-    public void stopPlay(){
-        if (null != mValueAnimation && mValueAnimation.isStarted()){
+    public void stopPlay() {
+        if (null != mValueAnimation && mValueAnimation.isStarted()) {
             mValueAnimation.end();
         }
     }

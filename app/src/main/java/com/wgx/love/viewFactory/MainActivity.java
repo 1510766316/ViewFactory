@@ -16,6 +16,7 @@ import com.wgx.love.viewFactory.fragments.ClockXFragment;
 import com.wgx.love.viewFactory.fragments.IndicateXFragment;
 import com.wgx.love.viewFactory.fragments.MusicDancerFragment;
 import com.wgx.love.viewFactory.fragments.ProgressBarFragment;
+import com.wgx.love.viewFactory.fragments.TestFragment;
 import com.wgx.love.viewFactory.fragments.WaveXFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBarFragment mProgressBarFragment;
     private MusicDancerFragment mMusicDancerFragment;
 
+
+    private TestFragment mTestFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         mClockXFragment = ClockXFragment.newInstance();
         mProgressBarFragment = ProgressBarFragment.newInstance();
         mMusicDancerFragment = MusicDancerFragment.newInstance();
-        fragments = new Fragment[]{mIndicateXFragment, mWaveXFragment, mClockXFragment, mProgressBarFragment, mMusicDancerFragment};
+
+        mTestFragment = TestFragment.newInstance();
+        fragments = new Fragment[]{mIndicateXFragment, mWaveXFragment, mClockXFragment, mProgressBarFragment, mMusicDancerFragment,mTestFragment};
 
     }
 
@@ -77,38 +82,10 @@ public class MainActivity extends AppCompatActivity {
                                     Log.e(TAG, "The selected index is out of fragments arrays!");
                                     return true;
                                 }
-                                switch (which) {
-                                    case 0:
-                                        if (currentIndex == 0) {
-                                            return true;
-                                        }
-                                        index = 0;
-                                        break;
-                                    case 1:
-                                        if (currentIndex == 1) {
-                                            return true;
-                                        }
-                                        index = 1;
-                                        break;
-                                    case 2:
-                                        if (currentIndex == 2) {
-                                            return true;
-                                        }
-                                        index = 2;
-                                        break;
-                                    case 3:
-                                        if (currentIndex == 3) {
-                                            return true;
-                                        }
-                                        index = 3;
-                                        break;
-                                    case 4:
-                                        if (currentIndex == 4) {
-                                            return true;
-                                        }
-                                        index = 4;
-                                        break;
+                                if (currentIndex == which) {
+                                    return true;
                                 }
+                                index = which;
                                 switcherFragment(index);
                                 return true;
                             }
