@@ -52,10 +52,10 @@ public class WaveX extends View {
 
     private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setStrokeWidth(2);
         mPaint.setColor(Color.YELLOW);
-        mWaveLength = 300;
+        mWaveLength = 400;
         if (null == mValueAnimation) {
             mValueAnimation = ValueAnimator.ofInt(0, 400);
         }
@@ -65,6 +65,7 @@ public class WaveX extends View {
         mValueAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
+                Log.i(TAG, "onAnimationUpdate: offset="+offset);
                 offset += 5;
                 if (offset > mWaveLength) {
                     offset = offset - mWaveLength;
@@ -90,16 +91,13 @@ public class WaveX extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mPath.reset();
+        Log.i(TAG, "onDraw: offset="+offset);
+        Log.i(TAG, "onDraw: mCenterY="+mCenterY);
         mPath.moveTo(-mWaveLength, mCenterY);
         for (int j = 0; j < mWaveCount; j++) {
             mPath.quadTo(-mWaveLength * 3 / 4 + j * mWaveLength + offset , mCenterY , -mWaveLength / 2 + j * mWaveLength + offset, mCenterY);
             mPath.quadTo(-mWaveLength / 4 + j * mWaveLength + offset, mCenterY, j * mWaveLength + offset, mCenterY);
         }
-
-        mPath.lineTo(mScreenWidth, mScreenHeight);
-        mPath.lineTo(0, mScreenHeight);
-        mPath.close();
         canvas.drawPath(mPath, mPaint);
     }
 
