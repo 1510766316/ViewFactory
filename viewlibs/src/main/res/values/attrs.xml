@@ -55,4 +55,19 @@
         <attr name="danceRefreshTime" format="integer"/>
         <attr name="danceAuto" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="DrawCircle">
+        <attr name="outRadius" format="dimension"/>
+        <attr name="inRadius" format="dimension"/>
+        <attr name="lineWidth" format="integer"/>
+        <attr name="lineOffset" format="integer"/>
+        <attr name="outBg" format="color"/>
+        <attr name="inBg" format="color"/>
+        <attr name="outLongLine" format="integer"/>
+        <attr name="outShortLine" format="integer"/>
+        <attr name="outLongLineColor" format="color"/>
+        <attr name="outShortLineColor" format="color"/>
+        <attr name="indicateView" format="reference"/>
+        <attr name="threeD" format="boolean"/>
+    </declare-styleable>
 </resources>

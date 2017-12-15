@@ -12,7 +12,7 @@ import com.wgx.love.viewFactory.R;
  * Created by imotor on 17-8-2.
  */
 
-public class MusicDancerFragment extends Fragment {
+public class MusicDancerFragment extends BaseFragment {
     private final static String TAG = "MusicDancerFragment";
     private View mRootView;
 

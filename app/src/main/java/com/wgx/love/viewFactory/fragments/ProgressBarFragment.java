@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.wgx.love.viewFactory.R;
 import com.wgx.love.viewlibs.CircularProgressBar;
 
-public class ProgressBarFragment extends Fragment implements View.OnClickListener {
+public class ProgressBarFragment extends BaseFragment implements View.OnClickListener {
 
     private TextView tv;
     private CircularProgressBar mCircularProgressBar;

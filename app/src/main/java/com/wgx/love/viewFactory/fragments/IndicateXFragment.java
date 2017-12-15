@@ -16,7 +16,7 @@ import com.wgx.love.viewlibs.IndicateX;
  * Created by wugx on 17-8-1.
  */
 
-public class IndicateXFragment extends Fragment implements View.OnClickListener {
+public class IndicateXFragment extends BaseFragment implements View.OnClickListener {
     private final static String TAG = "IndicateXFragment";
     private IndicateX mIndicateX;
     private Button mSwitchBT;

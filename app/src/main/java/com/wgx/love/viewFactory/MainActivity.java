@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.wgx.love.viewFactory.fragments.CircleFragment;
 import com.wgx.love.viewFactory.fragments.ClockXFragment;
 import com.wgx.love.viewFactory.fragments.IndicateXFragment;
 import com.wgx.love.viewFactory.fragments.MusicDancerFragment;
@@ -32,9 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private ClockXFragment mClockXFragment;
     private ProgressBarFragment mProgressBarFragment;
     private MusicDancerFragment mMusicDancerFragment;
-
+    private CircleFragment mCircleFragment;
 
     private TestFragment mTestFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
         mClockXFragment = ClockXFragment.newInstance();
         mProgressBarFragment = ProgressBarFragment.newInstance();
         mMusicDancerFragment = MusicDancerFragment.newInstance();
-
         mTestFragment = TestFragment.newInstance();
-        fragments = new Fragment[]{mIndicateXFragment, mWaveXFragment, mClockXFragment, mProgressBarFragment, mMusicDancerFragment,mTestFragment};
+        mCircleFragment = CircleFragment.newInstance();
+        fragments = new Fragment[]{mIndicateXFragment, mWaveXFragment, mClockXFragment, mProgressBarFragment, mMusicDancerFragment,mCircleFragment,mTestFragment};
 
     }
 

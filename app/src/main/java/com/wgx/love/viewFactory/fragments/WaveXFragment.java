@@ -17,7 +17,7 @@ import com.wgx.love.viewlibs.WaveX;
  * Created by wugx on 17-8-1.
  */
 
-public class WaveXFragment extends Fragment implements View.OnClickListener {
+public class WaveXFragment extends BaseFragment implements View.OnClickListener {
     private final static String TAG = "WaveXFragment";
     private Button mSwitchBT;
     private View mRootView;

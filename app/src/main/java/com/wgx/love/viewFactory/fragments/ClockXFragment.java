@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.wgx.love.viewFactory.R;
 
-public class ClockXFragment extends Fragment {
+public class ClockXFragment extends BaseFragment {
     private final static String TAG = "ClockXFragment";
     private View mRootView;
 
