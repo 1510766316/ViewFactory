@@ -68,6 +68,6 @@
         <attr name="outLongLineColor" format="color"/>
         <attr name="outShortLineColor" format="color"/>
         <attr name="indicateView" format="reference"/>
-        <attr name="threeD" format="boolean"/>
+        <attr name="showIndicate" format="boolean"/>
     </declare-styleable>
 </resources>
