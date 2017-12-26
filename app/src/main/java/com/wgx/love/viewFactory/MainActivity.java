@@ -18,6 +18,7 @@ import com.wgx.love.viewFactory.fragments.IndicateXFragment;
 import com.wgx.love.viewFactory.fragments.MusicDancerFragment;
 import com.wgx.love.viewFactory.fragments.ProgressBarFragment;
 import com.wgx.love.viewFactory.fragments.TestFragment;
+import com.wgx.love.viewFactory.fragments.VolumeProgressFragment;
 import com.wgx.love.viewFactory.fragments.WaveXFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBarFragment mProgressBarFragment;
     private MusicDancerFragment mMusicDancerFragment;
     private CircleFragment mCircleFragment;
+
+    private VolumeProgressFragment mVolumeProgressFragment;
 
     private TestFragment mTestFragment;
 
@@ -55,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
         mMusicDancerFragment = MusicDancerFragment.newInstance();
         mTestFragment = TestFragment.newInstance();
         mCircleFragment = CircleFragment.newInstance();
-        fragments = new Fragment[]{mIndicateXFragment, mWaveXFragment, mClockXFragment, mProgressBarFragment, mMusicDancerFragment,mCircleFragment,mTestFragment};
+        mVolumeProgressFragment = VolumeProgressFragment.newInstance();
+        fragments = new Fragment[]{mIndicateXFragment, mWaveXFragment, mClockXFragment, mProgressBarFragment, mMusicDancerFragment,mCircleFragment,mVolumeProgressFragment,mTestFragment};
 
     }
 

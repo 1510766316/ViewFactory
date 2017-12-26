@@ -70,4 +70,13 @@
         <attr name="indicateView" format="reference"/>
         <attr name="showIndicate" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="VolumeProgressBar">
+        <attr name="bgColor" format="color"/>
+        <attr name="progressColor" format="color"/>
+        <attr name="itemHeight" format="integer"/>
+        <attr name="itemOffset" format="integer"/>
+        <attr name="circleSize" format="integer"/>
+        <attr name="halfProgress" format="boolean"/>
+    </declare-styleable>
 </resources>
