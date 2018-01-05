@@ -1,6 +1,12 @@
 package com.wgx.love.viewFactory;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -40,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
 
     private TestFragment mTestFragment;
 
+    private Bitmap LargeBitmap = null;
+    private NotificationManager myManager = null;
+    private Notification myNotification;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         mContext = this;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        LargeBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        //1.从系统服务中获得通知管理器
+        myManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         init();
     }
 
@@ -61,6 +74,35 @@ public class MainActivity extends AppCompatActivity {
         mVolumeProgressFragment = VolumeProgressFragment.newInstance();
         fragments = new Fragment[]{mIndicateXFragment, mWaveXFragment, mClockXFragment, mProgressBarFragment, mMusicDancerFragment,mCircleFragment,mVolumeProgressFragment,mTestFragment};
 
+        PendingIntent pi = PendingIntent.getActivity(
+                mContext,
+                100,
+                new Intent(mContext, MainActivity.class),
+                PendingIntent.FLAG_CANCEL_CURRENT
+        );
+
+        Notification.Builder myBuilder = new Notification.Builder(mContext);
+        myBuilder.setContentTitle("QQ")
+                .setContentText("这是内容")
+                .setSubText("这是补充小行内容")
+                .setTicker("您收到新的消息")
+                //设置状态栏中的小图片，尺寸一般建议在24×24，这个图片同样也是在下拉状态栏中所显示
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                //设置默认声音和震动
+                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+                .setAutoCancel(false)//点击
+                .setWhen(System.currentTimeMillis())//设置通知时间
+                .setPriority(Notification.PRIORITY_HIGH)//高优先级
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                //android5.0加入了一种新的模式Notification的显示等级，共有三种：
+                //VISIBILITY_PUBLIC  只有在没有锁屏时会显示通知
+                //VISIBILITY_PRIVATE 任何情况都会显示通知
+                //VISIBILITY_SECRET  在安全锁和没有锁屏的情况下显示通知
+                .setContentIntent(pi);  //3.关联PendingIntent
+
+        myNotification = myBuilder.build();
+        //4.通过通知管理器来发起通知，ID区分通知
+        myManager.notify(1, myNotification);
     }
 
 

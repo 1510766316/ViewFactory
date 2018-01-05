@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -65,12 +66,13 @@ public class VolumeProgressBar extends View {
     /**
      * 每个进度条的圆角大小
      */
-    private int circleSize ;
+    private int circleSize;
     /**
      * 每个进度条前进半格
      */
     private boolean isHalfProgress;
 
+    private VolumeProgressListener mListener;
     public VolumeProgressBar(Context context) {
         this(context, null);
     }
@@ -83,14 +85,14 @@ public class VolumeProgressBar extends View {
         super(context, attrs, defStyleAttr);
         mContext = context;
         Log.i(TAG, "VolumeProgressBar-- ");
-        TypedArray typedArray = mContext.obtainStyledAttributes(attrs,R.styleable.VolumeProgressBar);
-        bgColor = typedArray.getColor(R.styleable.VolumeProgressBar_bgColor, Color.argb(51,255,255,255));
+        TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.VolumeProgressBar);
+        bgColor = typedArray.getColor(R.styleable.VolumeProgressBar_bgColor, Color.argb(51, 255, 255, 255));
         progressColor = typedArray.getColor(R.styleable.VolumeProgressBar_progressColor, Color.parseColor("#FF3bbf36"));
-        itemHeight = typedArray.getInteger(R.styleable.VolumeProgressBar_itemHeight,10);
-        itemWidth = typedArray.getInteger(R.styleable.VolumeProgressBar_itemHeight,60);
-        itemOffset = typedArray.getInteger(R.styleable.VolumeProgressBar_itemOffset,10);
-        circleSize = typedArray.getInteger(R.styleable.VolumeProgressBar_circleSize,2);
-        isHalfProgress = typedArray.getBoolean(R.styleable.VolumeProgressBar_halfProgress,true);
+        itemHeight = typedArray.getInteger(R.styleable.VolumeProgressBar_itemHeight, 10);
+        itemWidth = typedArray.getInteger(R.styleable.VolumeProgressBar_itemHeight, 60);
+        itemOffset = typedArray.getInteger(R.styleable.VolumeProgressBar_itemOffset, 10);
+        circleSize = typedArray.getInteger(R.styleable.VolumeProgressBar_circleSize, 2);
+        isHalfProgress = typedArray.getBoolean(R.styleable.VolumeProgressBar_halfProgress, true);
         typedArray.recycle();
         init();
     }
@@ -152,6 +154,42 @@ public class VolumeProgressBar extends View {
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                int itemH = itemHeight  + itemOffset * 2;
+                float moveY = event.getY();
+                if (moveY < 0 || moveY > mViewHeight+itemOffset){
+                    return true;
+                }
+                int pro = drawNum - (int)moveY/itemH;
+                if (isHalfProgress){
+                    pro = pro * 2;
+                }
+                if (pro<0 || pro > (isHalfProgress?drawNum*2:drawNum)){
+                    return true;
+                }
+                if (proNum != pro){
+                    proNum = pro;
+                    invalidate();
+                    if (null != mListener){
+                        mListener.onTouchListener(pro);
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Log.i(TAG, "onDraw ");
@@ -171,20 +209,20 @@ public class VolumeProgressBar extends View {
         }
     }
 
-    private void drawProgress(Canvas canvas){
+    private void drawProgress(Canvas canvas) {
         RectF rectF;
         int tmpPro = proNum;
-        if (isHalfProgress){
-            tmpPro = proNum % 2 == 1 ?  proNum/2 + 1 : proNum/2;
+        if (isHalfProgress) {
+            tmpPro = proNum % 2 == 1 ? proNum / 2 + 1 : proNum / 2;
         }
-        Log.i(TAG,"proNum="+proNum+" tmpPro="+tmpPro);
-        for (int i = drawNum; i >= drawNum-tmpPro; i--) {
+        Log.i(TAG, "proNum=" + proNum + " tmpPro=" + tmpPro);
+        for (int i = drawNum; i >= drawNum - tmpPro; i--) {
             rectF = new RectF();
             rectF.left = 0;
             rectF.right = itemWidth;
-            if ( proNum % 2 == 1 && drawNum - i == tmpPro && isHalfProgress){
-                rectF.top = itemHeight * i + itemOffset * (i > 0 ? 2 * i + 1 : 1)+itemHeight/2;
-            }else {
+            if (proNum % 2 == 1 && drawNum - i == tmpPro && isHalfProgress) {
+                rectF.top = itemHeight * i + itemOffset * (i > 0 ? 2 * i + 1 : 1) + itemHeight / 2;
+            } else {
                 rectF.top = itemHeight * i + itemOffset * (i > 0 ? 2 * i + 1 : 1);
             }
             rectF.bottom = itemHeight * (i + 1) + itemOffset * (i > 0 ? 2 * i + 1 : 1);
@@ -194,30 +232,41 @@ public class VolumeProgressBar extends View {
 
     /**
      * 获取当前最大进度数
+     *
      * @return
      */
-    public int getDrawNum(){
+    public int getDrawNum() {
         return drawNum;
     }
 
     /**
      * 获取当前进度
+     *
      * @return
      */
-    public int getProgressNum(){
+    public int getProgressNum() {
         return proNum;
     }
 
     /**
      * 设置进度
+     *
      * @param pro
      */
-    public void setProgress(int pro){
-        if (pro < 0 || pro > (isHalfProgress ? drawNum*2 :drawNum)){
-            Log.e(TAG,"pro can not be high than drawNum or low than zero");
+    public void setProgress(int pro) {
+        if (pro < 0 || pro > (isHalfProgress ? drawNum * 2 : drawNum)) {
+            Log.e(TAG, "pro can not be high than drawNum or low than zero");
             return;
         }
         proNum = pro;
         invalidate();
+    }
+
+    public interface VolumeProgressListener{
+        void onTouchListener(int pro);
+    }
+
+    public void addVolumeTouchListerner(VolumeProgressListener l){
+        mListener = l;
     }
 }

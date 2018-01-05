@@ -46,6 +46,7 @@ public class VolumeProgressFragment extends BaseFragment implements View.OnClick
         reBt = (Button) mRootView.findViewById(R.id.reduce);
         inBt = (Button) mRootView.findViewById(R.id.increase);
         volume = (VolumeProgressBar) mRootView.findViewById(R.id.volume);
+        volume.addVolumeTouchListerner(mListener);
         tmp = (TextView) mRootView.findViewById(R.id.tmp);
         reBt.setOnClickListener(this);
         inBt.setOnClickListener(this);
@@ -73,4 +74,11 @@ public class VolumeProgressFragment extends BaseFragment implements View.OnClick
         }
         tmp.setText("drawNum="+volume.getDrawNum()+"  progress="+volume.getProgressNum());
     }
+
+    private VolumeProgressBar.VolumeProgressListener mListener = new VolumeProgressBar.VolumeProgressListener() {
+        @Override
+        public void onTouchListener(int pro) {
+            tmp.setText("drawNum="+volume.getDrawNum()+"  progress="+pro);
+        }
+    };
 }
