@@ -78,5 +78,7 @@
         <attr name="itemOffset" format="integer"/>
         <attr name="circleSize" format="integer"/>
         <attr name="halfProgress" format="boolean"/>
+        <attr name="canTouch" format="boolean"/>
+        <attr name="isVertical" format="boolean"/>
     </declare-styleable>
 </resources>

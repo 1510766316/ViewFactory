@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.SoundEffectConstants;
 import android.view.View;
 
 /**
@@ -71,8 +72,19 @@ public class VolumeProgressBar extends View {
      * 每个进度条前进半格
      */
     private boolean isHalfProgress;
+    /**
+     * 触摸标识
+     */
+    private boolean canTouch;
+
+    /**
+     * 竖向显示标识
+     */
+    private boolean isVertical;
+
 
     private VolumeProgressListener mListener;
+
     public VolumeProgressBar(Context context) {
         this(context, null);
     }
@@ -88,11 +100,13 @@ public class VolumeProgressBar extends View {
         TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.VolumeProgressBar);
         bgColor = typedArray.getColor(R.styleable.VolumeProgressBar_bgColor, Color.argb(51, 255, 255, 255));
         progressColor = typedArray.getColor(R.styleable.VolumeProgressBar_progressColor, Color.parseColor("#FF3bbf36"));
-        itemHeight = typedArray.getInteger(R.styleable.VolumeProgressBar_itemHeight, 10);
-        itemWidth = typedArray.getInteger(R.styleable.VolumeProgressBar_itemHeight, 60);
-        itemOffset = typedArray.getInteger(R.styleable.VolumeProgressBar_itemOffset, 10);
-        circleSize = typedArray.getInteger(R.styleable.VolumeProgressBar_circleSize, 2);
+        itemOffset = typedArray.getInteger(R.styleable.VolumeProgressBar_itemOffset, 20);
+        circleSize = typedArray.getInteger(R.styleable.VolumeProgressBar_circleSize, 4);
         isHalfProgress = typedArray.getBoolean(R.styleable.VolumeProgressBar_halfProgress, true);
+        canTouch = typedArray.getBoolean(R.styleable.VolumeProgressBar_canTouch, true);
+        isVertical = typedArray.getBoolean(R.styleable.VolumeProgressBar_isVertical, true);
+        itemHeight = typedArray.getInteger(R.styleable.VolumeProgressBar_itemHeight, isVertical ? 20 : 100);
+        itemWidth = typedArray.getInteger(R.styleable.VolumeProgressBar_itemHeight, isVertical ? 100 : 20);
         typedArray.recycle();
         init();
     }
@@ -122,9 +136,8 @@ public class VolumeProgressBar extends View {
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
         //设置一个默认值，就是这个View的默认宽度为340，这个看我们自定义View的要求
-        int result = 60;
+        int result = isVertical ? 120 : 600;
         if (specMode == MeasureSpec.AT_MOST) {//相当于我们设置为wrap_content
-            result = 60;
         } else if (specMode == MeasureSpec.EXACTLY) {//相当于我们设置为match_parent或者为一个具体的值
             result = specSize;
         }
@@ -134,9 +147,8 @@ public class VolumeProgressBar extends View {
     private int measureHeight(int measureSpec) {
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
-        int result = 450;
+        int result = isVertical ? 600 : 120;
         if (specMode == MeasureSpec.AT_MOST) {
-            result = 450;
         } else if (specMode == MeasureSpec.EXACTLY) {
             result = specSize;
         }
@@ -149,32 +161,43 @@ public class VolumeProgressBar extends View {
         Log.i(TAG, "onSizeChanged ");
         mViewWidth = w;
         mViewHeight = h;
-        drawNum = mViewHeight / (itemHeight + itemOffset * 2);
+        if (isVertical) {
+            drawNum = mViewHeight / (itemHeight + itemOffset * 2);
+        } else {
+            drawNum = mViewWidth / (itemWidth + itemOffset * 2);
+        }
+
         Log.i(TAG, "onSizeChanged drawNum=" + drawNum);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                Log.i(TAG,"ACTION_DOWN");
+                playSoundEffect(SoundEffectConstants.CLICK);
                 break;
             case MotionEvent.ACTION_MOVE:
-                int itemH = itemHeight  + itemOffset * 2;
-                float moveY = event.getY();
-                if (moveY < 0 || moveY > mViewHeight+itemOffset){
+                int itemS = (isVertical ? itemHeight : itemWidth) + itemOffset * 2;
+                float moveD = isVertical ? event.getY() : event.getX();
+                if (moveD < 0 || moveD > ((isVertical ? mViewHeight : mViewWidth) + itemOffset)) {
+                    Log.i(TAG,"ACTION_MOVE 0 moveD="+moveD+"  1="+(moveD < 0)+"  2="+(moveD > ((isVertical ? itemHeight : itemWidth) + itemOffset)));
                     return true;
                 }
-                int pro = drawNum - (int)moveY/itemH;
-                if (isHalfProgress){
+                int pro = isVertical ? (drawNum - (int) moveD / itemS) : (int) moveD / itemS;
+                if (isHalfProgress) {
                     pro = pro * 2;
                 }
-                if (pro<0 || pro > (isHalfProgress?drawNum*2:drawNum)){
+                if (pro < 0 || pro > (isHalfProgress ? drawNum * 2 : drawNum)) {
+                    Log.i(TAG,"ACTION_MOVE 2");
                     return true;
                 }
-                if (proNum != pro){
+                if (proNum != pro) {
+                    Log.i(TAG,"ACTION_MOVE pro="+pro);
                     proNum = pro;
                     invalidate();
-                    if (null != mListener){
+                    if (null != mListener) {
                         mListener.onTouchListener(pro);
                     }
                 }
@@ -199,14 +222,26 @@ public class VolumeProgressBar extends View {
 
     private void drawBg(Canvas canvas) {
         RectF rectF;
-        for (int i = 0; i < drawNum; i++) {
-            rectF = new RectF();
-            rectF.left = 0;
-            rectF.right = itemWidth;
-            rectF.top = itemHeight * i + itemOffset * (i > 0 ? 2 * i + 1 : 1);
-            rectF.bottom = itemHeight * (i + 1) + itemOffset * (i > 0 ? 2 * i + 1 : 1);
-            canvas.drawRoundRect(rectF, circleSize, circleSize, bgPaint);
+        if (isVertical){
+            for (int i = 0; i < drawNum; i++) {
+                rectF = new RectF();
+                rectF.left = 0;
+                rectF.right = itemWidth;
+                rectF.top = itemHeight * i + itemOffset * (i > 0 ? 2 * i + 1 : 1);
+                rectF.bottom = itemHeight * (i + 1) + itemOffset * (i > 0 ? 2 * i + 1 : 1);
+                canvas.drawRoundRect(rectF, circleSize, circleSize, bgPaint);
+            }
+        }else {
+            for (int i = 0; i < drawNum; i++) {
+                rectF = new RectF();
+                rectF.left = itemWidth * i + itemOffset * (i > 0 ? 2 * i + 1 : 1);
+                rectF.right = itemWidth * (i + 1) + itemOffset * (i > 0 ? 2 * i + 1 : 1);
+                rectF.top = 0;
+                rectF.bottom = itemHeight;
+                canvas.drawRoundRect(rectF, circleSize, circleSize, bgPaint);
+            }
         }
+
     }
 
     private void drawProgress(Canvas canvas) {
@@ -216,17 +251,32 @@ public class VolumeProgressBar extends View {
             tmpPro = proNum % 2 == 1 ? proNum / 2 + 1 : proNum / 2;
         }
         Log.i(TAG, "proNum=" + proNum + " tmpPro=" + tmpPro);
-        for (int i = drawNum; i >= drawNum - tmpPro; i--) {
-            rectF = new RectF();
-            rectF.left = 0;
-            rectF.right = itemWidth;
-            if (proNum % 2 == 1 && drawNum - i == tmpPro && isHalfProgress) {
-                rectF.top = itemHeight * i + itemOffset * (i > 0 ? 2 * i + 1 : 1) + itemHeight / 2;
-            } else {
-                rectF.top = itemHeight * i + itemOffset * (i > 0 ? 2 * i + 1 : 1);
+        if (isVertical){
+            for (int i = drawNum; i >= drawNum - tmpPro; i--) {
+                rectF = new RectF();
+                rectF.left = 0;
+                rectF.right = itemWidth;
+                if (proNum % 2 == 1 && drawNum - i == tmpPro && isHalfProgress) {
+                    rectF.top = itemHeight * i + itemOffset * (i > 0 ? 2 * i + 1 : 1) + itemHeight / 2;
+                } else {
+                    rectF.top = itemHeight * i + itemOffset * (i > 0 ? 2 * i + 1 : 1);
+                }
+                rectF.bottom = itemHeight * (i + 1) + itemOffset * (i > 0 ? 2 * i + 1 : 1);
+                canvas.drawRoundRect(rectF, circleSize, circleSize, progressPaint);
             }
-            rectF.bottom = itemHeight * (i + 1) + itemOffset * (i > 0 ? 2 * i + 1 : 1);
-            canvas.drawRoundRect(rectF, circleSize, circleSize, progressPaint);
+        }else {
+            for (int i = 0; i < tmpPro; i++) {
+                rectF = new RectF();
+                rectF.left = itemWidth * i + itemOffset * (i > 0 ? 2 * i + 1 : 1);
+                if (proNum % 2 == 1 &&   i + 1 == tmpPro && isHalfProgress) {
+                    rectF.right = itemWidth * (i + 1) + itemOffset * (i > 0 ? 2 * i + 1 : 1) - itemWidth / 2;
+                } else {
+                    rectF.right = itemWidth * (i + 1) + itemOffset * (i > 0 ? 2 * i + 1 : 1);
+                }
+                rectF.top = 0;
+                rectF.bottom = itemHeight;
+                canvas.drawRoundRect(rectF, circleSize, circleSize, progressPaint);
+            }
         }
     }
 
@@ -262,11 +312,11 @@ public class VolumeProgressBar extends View {
         invalidate();
     }
 
-    public interface VolumeProgressListener{
+    public interface VolumeProgressListener {
         void onTouchListener(int pro);
     }
 
-    public void addVolumeTouchListerner(VolumeProgressListener l){
+    public void addVolumeTouchListener(VolumeProgressListener l) {
         mListener = l;
     }
 }

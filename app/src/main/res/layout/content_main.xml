@@ -14,9 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="8dp"
+        android:orientation="horizontal"
         tools:layout_editor_absoluteY="8dp"
         tools:ignore="MissingConstraints"/>
-
 </android.support.constraint.ConstraintLayout>
 
 
